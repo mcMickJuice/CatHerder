@@ -1,3 +1,3 @@
-var app = require('./app');
+import app from './app';
 
 app(4000);

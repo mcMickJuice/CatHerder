@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 var webpack = require('webpack');
-var webpackDevServer = require('webpack-dev-server');
+var WebpackDevServer = require('webpack-dev-server');
 var path = require('path');
 var nodemon = require('nodemon');
 
@@ -63,7 +63,7 @@ var frontendConfig = {
     ],
     output: {
         path: path.join(__dirname, 'build/static'),
-        publicPath: 'http://localhost:4000/static',
+        publicPath: 'http://localhost:4000/',
         fileName: 'frontend.js'
     },
     module: {
@@ -113,7 +113,7 @@ gulp.task('build', ['frontend-build', 'backend-build'], function () {
 });
 
 gulp.task('frontend-watch', function () {
-    webpackDevServer(webpack(frontendConfig), {
+    new WebpackDevServer(webpack(frontendConfig), {
         publicPath: frontendConfig.output.publicPath,
         stats: 'errors-only',
         hot: true
@@ -127,11 +127,10 @@ gulp.task('frontend-watch', function () {
     })
 });
 
-gulp.task('backend-watch', function(done) {
+gulp.task('backend-watch', function (done) {
     var firedDone = false;
-    webpack(backendConfig).watch(100, function(err, stats) {
-        console.log('change detected, starting nodemon');
-        if(!firedDone) {
+    webpack(backendConfig).watch(100, function (err, stats) {
+        if (!firedDone) {
             firedDone = true;
             done();
         }
@@ -140,18 +139,18 @@ gulp.task('backend-watch', function(done) {
     })
 });
 
-gulp.task('watch', ['backend-watch'], function() {
-   nodemon({
-       execMap: {
-           js: 'node'
-       },
-       script: path.resolve(__dirname, 'build/backend-web'),
-       //ignore everything, watch nothing. webpack watch will handle restarting
-       ignore: ['*'],
-       watch: ['foo/'],
-       ext: 'noop'
-   }).on('restart', function() {
-       console.log('Patched!!!')
-   })
+gulp.task('watch', ['backend-watch', 'frontend-watch'], function () {
+    nodemon({
+        execMap: {
+            js: 'node'
+        },
+        script: path.resolve(__dirname, 'build/backend-web'),
+        //ignore everything, watch nothing. webpack watch will handle restarting
+        ignore: ['*'],
+        watch: ['foo/'],
+        ext: 'noop'
+    }).on('restart', function () {
+        console.log('Patched!!!')
+    })
 });
 
