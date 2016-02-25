@@ -1,3 +1,3 @@
-import app from './app';
+import {start as appStart} from './app';
 
-app(4000);
+appStart(4000);

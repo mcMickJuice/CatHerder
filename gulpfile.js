@@ -1,86 +1,22 @@
 var gulp = require('gulp');
 var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
+var runSequence = require('run-sequence');
 var path = require('path');
 var nodemon = require('nodemon');
-
-//setup backend config
-var thirdParty = '/(node_modules|bower_components)/';
-
-var nodeModules = require('fs').readdirSync('node_modules')
-    .filter(x => ['bin'].indexOf(x) === -1);
-
-var backendConfig = {
-    entry: [
-        'webpack/hot/signal.js',
-        './src/backend-web-app/main.js'
-    ],
-    output: {
-        path: path.join(__dirname, 'build'),
-        filename: 'backend-web.js'
-    },
-    node:{
-        __dirname: false,
-    },
-    externals: [
-        function (context, request, callback) {
-            var pathStart = request.split('/')[0];
-            if (nodeModules.indexOf(pathStart) >= 0 && request != 'webpack/hot/signal.js') {
-                return callback(null, "commonjs " + request);
-            }
-
-            callback();
-        }
-    ],
-    module: {
-        loaders: [
-            {test: /\.js$/, exclude: thirdParty, loader: 'babel', query: {cacheDirectory: true, presets: ['es2015']}}
-        ]
-    },
-    debug: true,
-    devtool: 'source-map',
-    recordsPath: path.join(__dirname, 'build/_records'),
-    devServer: {
-        stats: 'errors-only'
-    },
-    plugins: [
-        new webpack.IgnorePlugin(/.(css|less|jsx)$/),
-        new webpack.BannerPlugin('require("source-map-support").install();'),
-        new webpack.HotModuleReplacementPlugin({quiet: true})
-    ]
-};
+var rimraf = require('rimraf');
+var backendConfig = require('./webpack.backend.js');
+var frontendConfig = require('./webpack.frontend.js');
 
 
-//setup web config
-var outputPath = path.join(__dirname, 'build/static');
-var frontendConfig = {
-    entry: [
-        //hot module loader too
-        'webpack-dev-server/client?http://localhost:3000',
-        './src/frontend-app/main.jsx'
-    ],
-    output: {
-        path: outputPath + '/js',
-        publicPath: 'http://localhost:3000/js',
-        filename: 'frontend.js'
-    },
-    module: {
-        loaders: [
-            {test: /\.css$/, exclude: thirdParty, loader: 'style!css'},
-            {test: /\.less$/, exclude: thirdParty, loader: 'style!css!less'},
-            {
-                test: /\.jsx?$/, exclude: thirdParty, loader: 'babel', query: {
-                cacheDirectory: true,
-                presets: ['es2015', 'react']
-            }
-            }
-        ]
-    },
-    debug: true,
-    devServer: {
-        stats: 'errors-only'
-    }
-};
+gulp.task('clean', function(done) {
+    rimraf('./build', {}, () => done());
+});
+
+gulp.task('move-static', function() {
+    return gulp.src('./src/frontend-app/index.html')
+        .pipe(gulp.dest('./build/static'));
+});
 
 function onBuild(done) {
     return function (err, stats) {
@@ -133,7 +69,7 @@ gulp.task('backend-watch', function (done) {
     })
 });
 
-gulp.task('watch', ['backend-watch', 'frontend-watch'], function () {
+gulp.task('nodemon-start', function() {
     nodemon({
         execMap: {
             js: 'node'
@@ -146,5 +82,12 @@ gulp.task('watch', ['backend-watch', 'frontend-watch'], function () {
     }).on('restart', function () {
         console.log('Patched!!!')
     })
+});
+
+gulp.task('watch', function (done) {
+    runSequence('clean', 'move-static'
+    ,['backend-watch', 'frontend-watch']
+    , 'nodemon-start'
+    , done);
 });
 
