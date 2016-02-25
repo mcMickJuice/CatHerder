@@ -1,25 +1,25 @@
 var serverApp = require('../../src/backend-web-app/app.js')
-var expect = require('chai').expect;
+var expect = require('chai').should();
+var http = require('http');
 
+var port = 4000
+var url = `http://localhost:${port}`;
 
-
-
-describe('my first test', function () {
+describe('calls to root', function () {
     beforeEach( done => {
         console.log('starting app')
-        serverApp.start(4000, () => done());
+        serverApp.start(port, () => done());
 
     });
 
     afterEach(() => {
         serverApp.stop();
-    })
+    });
 
-    it('should pass', function () {
-        expect(9).to.equal(9);
-    })
-
-    it('should pass again', function () {
-        expect(100).to.not.equal(10);
-    })
+    it('should return ok status', function(done) {
+        http.get(url, res => {
+            res.statusCode.should.equal(200);
+            done();
+        })
+    });
 })
