@@ -2,18 +2,17 @@ import express from 'express'
 import path from 'path'
 var app = express();
 
-var staticPath = path.join(__dirname,'static');
-
-app.use(express.static(staticPath));
+app.use(express.static(path.join(__dirname,'static')));
 
 app.get('/', (req, res) => {
     res.send();
 });
 
 var server;
-export function start(port)  {
+export function start(port, callback)  {
     server = app.listen(port, () => {
         console.log(`App listening on port ${port}`);
+        if(callback) callback();
     })
 };
 
