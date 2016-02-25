@@ -19,9 +19,8 @@ var backendConfig = {
         path: path.join(__dirname, 'build'),
         filename: 'backend-web.js'
     },
-    node: {
+    node:{
         __dirname: false,
-        __filename: true
     },
     externals: [
         function (context, request, callback) {
@@ -53,25 +52,24 @@ var backendConfig = {
 
 
 //setup web config
-
+var outputPath = path.join(__dirname, 'build/static');
 var frontendConfig = {
     entry: [
         //hot module loader too
         'webpack-dev-server/client?http://localhost:3000',
-        'webpack/hot/only-dev-server',
-        './src/frontend-app/main.js'
+        './src/frontend-app/main.jsx'
     ],
     output: {
-        path: path.join(__dirname, 'build/static'),
-        publicPath: 'http://localhost:4000/',
-        fileName: 'frontend.js'
+        path: outputPath + '/js',
+        publicPath: 'http://localhost:3000/js',
+        filename: 'frontend.js'
     },
     module: {
         loaders: [
             {test: /\.css$/, exclude: thirdParty, loader: 'style!css'},
             {test: /\.less$/, exclude: thirdParty, loader: 'style!css!less'},
             {
-                test: /\.jsx$/, exclude: thirdParty, loader: 'babel', query: {
+                test: /\.jsx?$/, exclude: thirdParty, loader: 'babel', query: {
                 cacheDirectory: true,
                 presets: ['es2015', 'react']
             }
@@ -81,10 +79,7 @@ var frontendConfig = {
     debug: true,
     devServer: {
         stats: 'errors-only'
-    },
-    plugins: [
-        new webpack.HotModuleReplacementPlugin({quiet: true})
-    ]
+    }
 };
 
 function onBuild(done) {
@@ -116,7 +111,6 @@ gulp.task('frontend-watch', function () {
     new WebpackDevServer(webpack(frontendConfig), {
         publicPath: frontendConfig.output.publicPath,
         stats: 'errors-only',
-        hot: true
     }).listen(3000, 'localhost', function (err, result) {
         if (err) {
             console.log('Error', err);

@@ -1,14 +1,13 @@
-//import express from 'express';
 import express from 'express'
 import path from 'path'
 var app = express();
 
-app.use(express.static(path.resolve(__dirname, '/static')));
+var staticPath = path.join(__dirname,'static');
+
+app.use(express.static(staticPath));
 
 app.get('/', (req, res) => {
-    res.write('yo check this');
-
-    res.end();
+    res.send();
 });
 
 export default (port) => {
