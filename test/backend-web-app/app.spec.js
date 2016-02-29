@@ -9,7 +9,6 @@ describe('calls to root', function () {
     beforeEach( done => {
         console.log('starting app')
         serverApp.start(port, () => done());
-
     });
 
     afterEach(() => {

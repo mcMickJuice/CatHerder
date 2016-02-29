@@ -5,6 +5,7 @@ var runSequence = require('run-sequence');
 var path = require('path');
 var nodemon = require('nodemon');
 var rimraf = require('rimraf');
+require('./test/test-gulp');
 
 var args = require('yargs').argv;
 process.env.NODE_ENV = args.env || 'development';
