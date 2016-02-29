@@ -1,6 +1,6 @@
 import passport from 'passport';
 import {Router} from 'express';
-import {setCookie} from '../cookieService';
+import {setCookie, removeCookie} from '../cookieService';
 import {auth} from '../configService';
 //TODO move this import to somewhere else. This kind of leaks our implementation for loggin in
 import * as LocalStrategy from '../auth/mongoLocalStrategy';
@@ -8,7 +8,7 @@ import * as LocalStrategy from '../auth/mongoLocalStrategy';
 export default function setupLoginRoutes(app) {
     const router = Router();
 
-    router.post('/', (req, res, next) => {
+    router.post('/login', (req, res, next) => {
         console.log('in authenticate');
 
         passport.authenticate('local', (err, user, info) => {
@@ -34,5 +34,12 @@ export default function setupLoginRoutes(app) {
         })
     });
 
-    app.use('/login', router);
+    router.post('/logout', (req, res) => {
+        removeCookie(res, auth.userCookieName);
+        res.status(201).json({
+            message: 'User has been successfully logged out'
+        })
+    });
+
+    app.use('/auth', router);
 }

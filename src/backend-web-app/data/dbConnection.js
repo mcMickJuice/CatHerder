@@ -6,7 +6,6 @@ import {MongoClient, ObjectId} from 'mongodb';
 //establish one connection when app starts
 let _connection = null;
 export function connection() {
-    console.log('request in connection');
     if (_connection) {
         return Q.when(_connection);
     }
