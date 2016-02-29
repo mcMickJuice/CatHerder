@@ -42,6 +42,11 @@ module.exports = {
     plugins: [
         new webpack.IgnorePlugin(/.(css|less|jsx)$/),
         new webpack.BannerPlugin('require("source-map-support").install();'),
-        new webpack.HotModuleReplacementPlugin({quiet: true})
+        new webpack.HotModuleReplacementPlugin({quiet: true}),
+        new webpack.DefinePlugin({
+            'process.env': {
+                'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+            }
+        })
     ]
 };

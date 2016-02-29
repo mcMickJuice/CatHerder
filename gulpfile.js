@@ -5,9 +5,12 @@ var runSequence = require('run-sequence');
 var path = require('path');
 var nodemon = require('nodemon');
 var rimraf = require('rimraf');
+
+var args = require('yargs').argv;
+process.env.NODE_ENV = args.env || 'development';
+
 var backendConfig = require('./webpack.backend.js');
 var frontendConfig = require('./webpack.frontend.js');
-
 
 gulp.task('clean', function(done) {
     rimraf('./build', {}, () => done());
@@ -59,6 +62,8 @@ gulp.task('frontend-watch', function () {
 
 gulp.task('backend-watch', function (done) {
     var firedDone = false;
+    startServer();
+
     webpack(backendConfig).watch(100, function (err, stats) {
         if (!firedDone) {
             firedDone = true;
@@ -69,7 +74,8 @@ gulp.task('backend-watch', function (done) {
     })
 });
 
-gulp.task('nodemon-start', function() {
+function startServer(){
+
     nodemon({
         execMap: {
             js: 'node'
@@ -82,12 +88,11 @@ gulp.task('nodemon-start', function() {
     }).on('restart', function () {
         console.log('Patched!!!')
     })
-});
+}
 
 gulp.task('watch', function (done) {
     runSequence('clean', 'move-static'
     ,['backend-watch', 'frontend-watch']
-    , 'nodemon-start'
     , done);
 });
 
