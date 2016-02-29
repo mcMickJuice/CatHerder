@@ -10,37 +10,22 @@ export function connection() {
         return Q.when(_connection);
     }
 
-    const deferred = Q.defer();
-
-    try{
-        MongoClient.connect(db.url, (err, conn) => {
-            if(err) {
-                console.log('an error occurred in mongo connect')
-                deferred.reject(err)
-            }
-            else {
-                _connection = conn;
-                deferred.resolve(conn);
-            }
+    return MongoClient.connect(db.url)
+        .then(conn => {
+            _connection = conn;
+            return conn;
         });
-    }
-    catch(e){
-        console.log('an error occurred');
-        deferred.reject(err);
-    }
-
-
-    return deferred.promise;
 }
 
+//TODO close this connection on cleanup per SO -http://stackoverflow.com/questions/14031763/doing-a-cleanup-action-just-before-node-js-exits
 export function closeConnection() {
-    if(_connection) {
+    if (_connection) {
         _connection.close();
         _connection = null;
     }
 }
 
 //TODO validate id requirements
-export function dbId(id){
+export function dbId(id) {
     return new ObjectId(id);
 }
