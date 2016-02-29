@@ -5,7 +5,8 @@ export default function setupPoolRoutes(app) {
     const router = Router();
 
     router.get('/', (req, res, next) => {
-        poolDataService.getAvailablePools('mjoyce') //userId
+        const {username} = req.user; //this is set in requestAuthorizationMiddleware
+        poolDataService.getAvailablePools(username) //userId
             .then(pools => res.json({pools}))
             .catch(next);
     });

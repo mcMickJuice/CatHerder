@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(cookieParser('MY_APP_SECRET'));
 app.use(passport.initialize());
 app.use(express.static(path.join(__dirname,'static')));
-app.use(requestAuthHandler);
+app.use(requestAuthHandler(/^\/login/));
 app.get('/', (req, res) => {
     res.send();
 });

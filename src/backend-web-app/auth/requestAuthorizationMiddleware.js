@@ -1,11 +1,26 @@
-export default function(req, res, next) {
-    //TODO ignore login and home routes
-    //if cookie is valid, set user on req then call next, next()
-    res.cookie('x-catherder-user', {time: new Date}, {maxAge: 10000, signed:true});
+import {getCookie} from'../cookieService'
+import {auth} from '../configService';
 
-    console.log(req.signedCookies);
 
-    res.clearCookie('x-catheder-user')
-    //else throw unauthorized
-    next()
+export default function (excludeRegex) {
+
+    return function requestAuthorizationMiddleware(req, res, next) {
+        if(excludeRegex && excludeRegex.test(req.path)) {
+            console.log('requestAuthorizationMiddleware - call next, safe route')
+            next();
+            return;
+        }
+
+        const userCookie = getCookie(req, auth.userCookieName);
+
+        if(!userCookie) {
+            res.status(401).json({
+                message: 'User is not authorized. Please login'
+            });
+            return;
+        }
+        req.user = userCookie;
+        next()
+    }
 }
+
