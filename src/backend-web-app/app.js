@@ -1,6 +1,7 @@
 import express from 'express'
 import path from 'path'
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import logger from './utility/loggerMiddleware';
 import errorHandler from './utility/errorMiddleware';
 import requestAuthHandler from './auth/requestAuthorizationMiddleware';
@@ -13,6 +14,7 @@ var env = process.env.NODE_ENV;
 
 app.use(logger);
 app.use(bodyParser.json());
+app.use(cookieParser('MY_APP_SECRET'));
 app.use(passport.initialize());
 app.use(express.static(path.join(__dirname,'static')));
 app.use(requestAuthHandler);
