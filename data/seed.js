@@ -22,8 +22,7 @@ var data = [
 data.forEach(d => d.data.forEach(d_c => d_c.created = createdDate));
 
 function run(url) {
-    //'mongodb://192.168.33.10:27017/catherder'
-    url = url || 'mongodb://localhost:27017/catherder';
+    url = url || 'mongodb://192.168.33.10:27017/catherder';
     console.log(url)
 
     MongoClient.connect(url, function(err, db) {
