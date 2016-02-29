@@ -5,7 +5,7 @@ export default function setupPoolRoutes(app) {
     const router = Router();
 
     router.get('/', (req, res, next) => {
-        poolDataService.getAvailablePools(1) //userId
+        poolDataService.getAvailablePools('mjoyce') //userId
             .then(pools => res.json({pools}))
             .catch(next);
     });

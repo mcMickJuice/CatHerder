@@ -14,7 +14,7 @@ export function getAvailablePools(userId) {
             const pools = conn.collection(POOL_COLLECTION);
             //TODO check if this returns promise if callback not provided...
             //TODO query should check each pools users collection, not created by field
-            return Q(pools.find({userId}).toArray())
+            return Q(pools.find({users: userId}).toArray())
         })
         .then(pools => {
             return pools;

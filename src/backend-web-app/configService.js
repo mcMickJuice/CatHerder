@@ -2,6 +2,6 @@
 
 export default {
     db: {
-        url: 'mongodb://localhost:27017/catherder'
+        url: 'mongodb://192.168.33.10:27017/catherder'
     }
 }
