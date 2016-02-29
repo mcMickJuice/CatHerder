@@ -35,6 +35,7 @@ export function closeConnection() {
     }
 }
 
+//TODO validate id requirements
 export function dbId(id){
     return new ObjectId(id);
 }
