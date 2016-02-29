@@ -23,6 +23,9 @@ bld/
 [Oo]bj/
 dist/
 
+# vagrant stuff
+.vagrant/
+
 # application secrets
 [Ss]ecret*/
 
