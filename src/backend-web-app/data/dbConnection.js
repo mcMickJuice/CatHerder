@@ -7,7 +7,6 @@ import {MongoClient, ObjectId} from 'mongodb';
 let _connection = null;
 export function connection() {
     if (_connection) {
-        console.log('connection already established');
         return Q.when(_connection);
     }
 

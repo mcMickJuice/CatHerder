@@ -3,6 +3,7 @@ import path from 'path'
 import bodyParser from 'body-parser';
 import logger from './utility/loggerMiddleware';
 import errorHandler from './utility/errorMiddleware';
+import requestAuthHandler from './auth/requestAuthorizationMiddleware';
 import poolRoutes from './routes/pool';
 import loginRoutes from './routes/login';
 import passport from 'passport';
@@ -14,6 +15,7 @@ app.use(logger);
 app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(express.static(path.join(__dirname,'static')));
+app.use(requestAuthHandler);
 app.get('/', (req, res) => {
     res.send();
 });
