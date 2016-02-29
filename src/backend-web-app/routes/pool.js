@@ -11,14 +11,12 @@ export default function setupPoolRoutes(app) {
     });
 
     router.get('/', (req, res, next) => {
-        //user is in request to pick out available pools
         poolDataService.getAvailablePools(1) //userId
             .then(pools => res.json({pools}))
             .catch(next);
     });
 
     router.post('/', (req, res, next) => {
-        //returns poolId
         poolDataService.createPool(req.body.config)
             .then(poolId => res.json({poolId}))
             .catch(next);

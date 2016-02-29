@@ -1,5 +1,6 @@
 import express from 'express'
 import path from 'path'
+import bodyParser from 'body-parser';
 import logger from './utility/loggerMiddleware';
 import errorHandler from './utility/errorMiddleware';
 import poolRoutes from './routes/pool';
@@ -8,6 +9,7 @@ var app = express();
 var env = process.env.NODE_ENV;
 
 app.use(logger);
+app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname,'static')));
 app.get('/', (req, res) => {
     res.send();
