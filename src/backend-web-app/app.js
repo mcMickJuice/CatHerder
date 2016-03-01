@@ -10,7 +10,6 @@ import loginRoutes from './routes/login';
 import passport from 'passport';
 var app = express();
 
-console.log(process.env)
 var env = process.env.NODE_ENV;
 
 app.use(logger);

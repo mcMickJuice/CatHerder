@@ -1,7 +1,7 @@
 var gulp = require('gulp');
 var Mocha = require('mocha');
 var path = require('path');
-var backendConfig = require('../webpack.backend.js')('development');
+var backendConfig = require('./webpack.backend.js')('development');
 var rimraf = require('rimraf');
 var webpack = require('webpack');
 var Q = require('q');
@@ -41,10 +41,10 @@ function cleanTests(directoryPath) {
 
 gulp.task('test-backend', function (done) {
     var outputOptions = {
-        entry: [path.resolve(__dirname, './backend-web-app/backend-tests.index.js')],
+        entry: [path.join(__dirname, 'test/backend-web-app/backend-tests.index.js')],
         output: {
             filename: 'backend-test.js',
-            path: path.resolve(__dirname, 'testOutput')
+            path: path.join(__dirname, 'test/testOutput')
         }
     };
 
