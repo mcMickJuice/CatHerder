@@ -5,19 +5,21 @@ var runSequence = require('run-sequence');
 var path = require('path');
 var nodemon = require('nodemon');
 var rimraf = require('rimraf');
-require('./test/test-gulp');
-
 var args = require('yargs').argv;
+
 process.env.NODE_ENV = args.env || 'development';
 
-var backendConfig = require('./webpack.backend.js');
+//import external gulp tasks
+require('./test/test-gulp');
+
+var backendConfig = require('./webpack.backend.js')(process.env.NODE_ENV);
 var frontendConfig = require('./webpack.frontend.js');
 
-gulp.task('clean', function(done) {
+gulp.task('clean', function (done) {
     rimraf('./build', {}, () => done());
 });
 
-gulp.task('move-static', function() {
+gulp.task('move-static', function () {
     return gulp.src('./src/frontend-app/index.html')
         .pipe(gulp.dest('./build/static'));
 });
@@ -62,10 +64,32 @@ gulp.task('frontend-watch', function () {
 });
 
 gulp.task('backend-watch', function (done) {
-    var firedDone = false;
-    startServer();
+    console.log(process.env.NODE_ENV)
+    //add hotplugin
+    var hotPlugin = new webpack.HotModuleReplacementPlugin({quiet: true});
+    backendConfig.plugins.push(hotPlugin);
+    //add signal.js to entry
+    var signalJsEntry = 'webpack/hot/signal.js';
+    if(backendConfig.entry instanceof Array && backendConfig.entry.indexOf(signalJsEntry) < 0) {
+        backendConfig.entry.unshift(signalJsEntry);
+    } else {
+        backendConfig.entry = [signalJsEntry, backendConfig.entry];
+    }
 
-    webpack(backendConfig).watch(100, function (err, stats) {
+    var firedDone = false;
+
+    var compiler = webpack(backendConfig);
+    //run initial compile
+    compiler.run((err, stats) => {
+        if(err) {
+            console.log('error on initial compile');
+        }
+
+        startServer();
+    });
+
+    //watch files to reload
+    compiler.watch(100, function (err, stats) {
         if (!firedDone) {
             firedDone = true;
             done();
@@ -75,8 +99,7 @@ gulp.task('backend-watch', function (done) {
     })
 });
 
-function startServer(){
-
+function startServer() {
     nodemon({
         execMap: {
             js: 'node'
@@ -93,7 +116,7 @@ function startServer(){
 
 gulp.task('watch', function (done) {
     runSequence('clean', 'move-static'
-    ,['backend-watch', 'frontend-watch']
-    , done);
+        , ['backend-watch', 'frontend-watch']
+        , done);
 });
 

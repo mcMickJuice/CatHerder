@@ -10,6 +10,7 @@ import loginRoutes from './routes/login';
 import passport from 'passport';
 var app = express();
 
+console.log(process.env)
 var env = process.env.NODE_ENV;
 
 app.use(logger);
@@ -19,7 +20,7 @@ app.use(passport.initialize());
 app.use(express.static(path.join(__dirname,'static')));
 
 //ignore auth and base endpoint, these will be "unsecure"
-app.use(requestAuthHandler(/^(\/auth|\/)/));
+app.use(requestAuthHandler(/^(\/auth|\/$)/));
 
 app.get('/', (req, res) => {
     res.send();

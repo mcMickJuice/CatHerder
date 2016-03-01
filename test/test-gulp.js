@@ -1,33 +1,42 @@
 var gulp = require('gulp');
 var Mocha = require('mocha');
 var path = require('path');
-var backendConfig = require('../webpack.backend.js');
+var backendConfig = require('../webpack.backend.js')('development');
 var rimraf = require('rimraf');
 var webpack = require('webpack');
+var Q = require('q');
 
-function backendTestBuild(testConfig, done) {
+function backendTestBuild(testConfig) {
     //change output to test file output
+    var deferred = Q.defer();
     backendConfig = Object.assign({}, backendConfig, testConfig);
 
     webpack(backendConfig).run((err, stats) => {
         if (err) {
             console.log('error in backend test build!', err);
-            process.exit();
         }
 
-        done();
+        deferred.resolve();
     });
+
+    return deferred.promise;
 }
 
-function runTest(testFile, done) {
+function runTest(testFile) {
     var mochaRunner = new Mocha();
+    var deferred = Q.defer();
     //mocha.addFile is an option too
     mochaRunner.files = [testFile];
-    mochaRunner.run(done);
+    mochaRunner.run(() => deferred.resolve());
+
+    return deferred.promise;
 }
 
-function cleanTests(directoryPath, done) {
-    rimraf(directoryPath, {}, done);
+function cleanTests(directoryPath) {
+    var deferred = Q.defer();
+    rimraf(directoryPath, {}, () => deferred.resolve());
+
+    return deferred.promise;
 }
 
 gulp.task('test-backend', function (done) {
@@ -39,7 +48,11 @@ gulp.task('test-backend', function (done) {
         }
     };
 
-    backendTestBuild(outputOptions,
-        () => runTest(path.resolve(outputOptions.output.path, outputOptions.output.filename)
-    , () => cleanTests(outputOptions.output.path, done)));
+    backendTestBuild(outputOptions)
+        .then(() => runTest(path.resolve(outputOptions.output.path, outputOptions.output.filename)))
+        .then(() => cleanTests(outputOptions.output.path))
+        .then(() => done())
+        .catch(err => {
+            console.log('Error in test pipeline', err);
+        });
 });
