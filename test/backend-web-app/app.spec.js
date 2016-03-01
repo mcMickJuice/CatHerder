@@ -22,11 +22,6 @@ describe('application', () => {
 
     describe('calls to root', () => {
         it('should return ok status', done => {
-            //request.get(url)
-            //    .on('response', res => {
-            //        res.statusCode.should.equal(200);
-            //        done();
-            //    })
             verifyResponse(res => {
                 res.statusCode.should.equal(200);
                 done()
