@@ -1,10 +1,10 @@
 var serverApp = require('../../src/backend-web-app/app.js')
-var expect = require('chai').should();
-var http = require('http');
+require('chai').should();
+var request = require('request');
 
-var port = 4000
+var port = 4000;
+
 var url = `http://localhost:${port}`;
-
 describe('calls to root', function () {
     beforeEach( done => {
         console.log('starting app')
@@ -16,7 +16,8 @@ describe('calls to root', function () {
     });
 
     it('should return ok status', function(done) {
-        http.get(url, res => {
+        request.get(url)
+            .on('response', res => {
             res.statusCode.should.equal(200);
             done();
         })

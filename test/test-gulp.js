@@ -1,5 +1,5 @@
 var gulp = require('gulp');
-var mocha = require('mocha');
+var Mocha = require('mocha');
 var path = require('path');
 var backendConfig = require('../webpack.backend.js');
 var rimraf = require('rimraf');
@@ -8,7 +8,6 @@ var webpack = require('webpack');
 function backendTestBuild(testConfig, done) {
     //change output to test file output
     backendConfig = Object.assign({}, backendConfig, testConfig);
-    console.log('backendTestBuild', backendConfig)
 
     webpack(backendConfig).run((err, stats) => {
         if (err) {
@@ -21,24 +20,19 @@ function backendTestBuild(testConfig, done) {
 }
 
 function runTest(testFile, done) {
-    console.log('run test', testFile);
-    var options = {
-        files: [testFile]
-    };
-
-    mocha(options, function () {
-        done();
-    })
+    var mochaRunner = new Mocha();
+    //mocha.addFile is an option too
+    mochaRunner.files = [testFile];
+    mochaRunner.run(done);
 }
 
-function cleanTests(directoryPath) {
-    console.log('clean tests', directoryPath)
-    rimraf(directoryPath);
+function cleanTests(directoryPath, done) {
+    rimraf(directoryPath, {}, done);
 }
 
-gulp.task('test-backend', function () {
+gulp.task('test-backend', function (done) {
     var outputOptions = {
-        entry: [path.resolve(__dirname, './backend-tests.index.js')],
+        entry: [path.resolve(__dirname, './backend-web-app/backend-tests.index.js')],
         output: {
             filename: 'backend-test.js',
             path: path.resolve(__dirname, 'testOutput')
@@ -46,6 +40,6 @@ gulp.task('test-backend', function () {
     };
 
     backendTestBuild(outputOptions,
-        () => runTest(path.resolve(outputOptions.output.path, outputOptions.output.filename))
-    , () => cleanTests(outputOptions.output.path));
+        () => runTest(path.resolve(outputOptions.output.path, outputOptions.output.filename)
+    , () => cleanTests(outputOptions.output.path, done)));
 });

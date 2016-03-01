@@ -17,6 +17,7 @@ module.exports = {
     },
     node:{
         __dirname: false,
+        global: false
     },
     externals: [
         function (context, request, callback) {

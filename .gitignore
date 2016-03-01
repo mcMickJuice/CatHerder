@@ -26,6 +26,9 @@ dist/
 # vagrant stuff
 .vagrant/
 
+# test output
+.testOutput/
+
 # application secrets
 [Ss]ecret*/
 
