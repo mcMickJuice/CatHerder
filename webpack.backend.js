@@ -1,8 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
 
-var thirdParty = '/(node_modules|bower_components)/';
-
 var nodeModules = require('fs').readdirSync('node_modules')
     .filter(x => ['bin'].indexOf(x) === -1);
 
@@ -31,7 +29,7 @@ function buildConfig(env) {
         ],
         module: {
             loaders: [
-                {test: /\.js$/, exclude: thirdParty, loader: 'babel', query: {cacheDirectory: true, presets: ['es2015']}}
+                {test: /\.js$/, exclude: /node_modules/, loader: 'babel', query: {cacheDirectory: true, presets: ['es2015']}}
             ]
         },
         debug: true,

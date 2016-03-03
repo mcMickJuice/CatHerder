@@ -13,8 +13,10 @@ function backendTestBuild(testConfig) {
 
     webpack(backendConfig).run((err, stats) => {
         if (err) {
-            console.log('error in backend test build!', err);
+            deferred.reject(err);
+            return;
         }
+
 
         deferred.resolve();
     });
@@ -41,11 +43,23 @@ function cleanTests(directoryPath) {
 
 gulp.task('test-backend', function (done) {
     var outputOptions = {
-        entry: [path.join(__dirname, 'test/backend-web-app/backend-tests.index.js')],
+        entry: path.resolve(__dirname,'./test/backend-web-app/backend-tests.index.js'),
         output: {
             filename: 'backend-test.js',
-            path: path.join(__dirname, 'test/testOutput')
-        }
+            path: path.join(__dirname, './test/testOutput')
+        },
+        module: {
+            loaders: [
+                {
+                    test: /\.js$/,
+                    exclude: [
+                        /node_modules/
+                    ],
+                    loader: 'babel',
+                    query: {presets: ['es2015'], plugins: ['babel-plugin-rewire']}
+                }
+            ]
+        },
     };
 
     backendTestBuild(outputOptions)
@@ -53,6 +67,6 @@ gulp.task('test-backend', function (done) {
         .then(() => cleanTests(outputOptions.output.path))
         .then(() => done())
         .catch(err => {
-            console.log('Error in test pipeline', err);
+            console.log('Error in test pipeline', err, err.stack);
         });
 });
