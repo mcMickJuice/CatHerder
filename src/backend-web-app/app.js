@@ -12,11 +12,16 @@ var app = express();
 
 var env = process.env.NODE_ENV;
 
-app.use(logger);
+if (env === 'development') {
+    app.use(logger);
+}
+
 app.use(bodyParser.json());
+
+//TODO secure this secret
 app.use(cookieParser('MY_APP_SECRET'));
 app.use(passport.initialize());
-app.use(express.static(path.join(__dirname,'static')));
+app.use(express.static(path.join(__dirname, 'static')));
 
 //ignore auth and base endpoint, these will be "unsecure"
 app.use(requestAuthHandler(/^(\/auth|\/$)/));
@@ -32,17 +37,23 @@ loginRoutes(app);
 app.use(errorHandler(env));
 
 var server;
-export function start(port, callback)  {
+export function start(port, callback) {
     server = app.listen(port, () => {
-        console.log(`App listening on port ${port}`);
-        if(callback) callback();
+        if (env === 'development') {
+            console.log(`App listening on port ${port}`);
+        }
+        if (callback) callback();
     })
 }
 
 export function stop() {
-    if(!server) {
+    if (!server) {
         throw new Error('server not started, can\'t call close!');
     }
-    console.log('App stopping');
+
+    if (env === 'development') {
+        console.log('App stopping');
+    }
+
     server.close();
 }
