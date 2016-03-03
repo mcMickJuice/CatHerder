@@ -1,7 +1,13 @@
 import {getCookie} from'../cookieService'
 import {auth} from '../configService';
 
-
+/**
+ * For each request, check if the request is authorized by seeing if the req has a userCookieName
+ * on the req
+ * @param excludeRegex {regex} regex for routes that are unsecure (i.e. should not be checked
+ * if user is authenticated)
+ * @returns {undefined}
+ */
 export default function (excludeRegex) {
 
     return function requestAuthorizationMiddleware(req, res, next) {
