@@ -1,5 +1,5 @@
-import {getCookie} from'../cookieService'
-import {auth} from '../configService';
+import { getCookie } from '../cookieService';
+import { auth } from '../configService';
 
 /**
  * For each request, check if the request is authorized by seeing if the req has a userCookieName
@@ -9,22 +9,21 @@ import {auth} from '../configService';
  * @returns {undefined}
  */
 export default function (excludeRegex) {
-
-    return function requestAuthorizationMiddleware(req, res, next) {
-        if(excludeRegex && excludeRegex.test(req.path)) {
-            next();
-            return;
-        }
-
-        const userCookie = getCookie(req, auth.userCookieName);
-        if(!userCookie) {
-            res.status(401).json({
-                message: 'User is not authorized. Please login'
-            });
-            return;
-        }
-        req.user = userCookie;
-        next()
+  return function requestAuthorizationMiddleware(req, res, next) {
+    if (excludeRegex && excludeRegex.test(req.path)) {
+      next();
+      return;
     }
+
+    const userCookie = getCookie(req, auth.userCookieName);
+    if (!userCookie) {
+      res.status(401).json({
+        message: 'User is not authorized. Please login',
+      });
+      return;
+    }
+    req.user = userCookie; // eslint-disable-line no-param-reassign
+    next();
+  };
 }
 
