@@ -5,13 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha ./test/**/*.spec.js",
-    "backend-watch": "gulp backend-watch --env development"
+    "backend-watch": "gulp backend-watch --env development",
+    "seed-users": "node ./data/seed"
   },
   "author": "mcMickJuice",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.0",
     "cookie-parser": "^1.4.1",
+    "cookies-js": "^1.2.2",
     "express": "^4.13.4",
     "express-session": "^1.13.0",
     "mongodb": "^2.1.7",

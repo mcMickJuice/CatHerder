@@ -22,8 +22,13 @@ export default function setupLoginRoutes(app) {
       }
 
       setCookie(res, auth.userCookieName, user);
+      console.log('authenticated user', user);
+      const { username, imageUrl, fullName } = user;
       res.status(200).json({
         message: 'User validated',
+        username,
+        imageUrl,
+        fullName,
       });
 
       return true;

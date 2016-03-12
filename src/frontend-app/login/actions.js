@@ -1,4 +1,5 @@
 import { login as _login } from '../services/authenticationService';
+import { setLoggedInUser } from '../services/clientStorage';
 
 export const LOGIN_REQUESTED = 'LOGIN_REQUESTED';
 export const requestLogin = () => ({
@@ -13,8 +14,9 @@ export const loginResultReceived = (hasError) => ({
 }
 );
 
-function setUsernameFromResponse(res) {
-  console.log('setting username', res.username);
+function setUsernameFromResponse(jsonBody) {
+  const { username, imageUrl, fullName } = jsonBody;
+  setLoggedInUser(username, imageUrl, fullName);
 }
 
 export const login = (username, password) =>
@@ -23,10 +25,9 @@ export const login = (username, password) =>
       dispatch(requestLogin());
 
       return _login(username, password)
-        .then(res => {
+        .then(({ body }) => {
           // redirect to home page again
-          // set username in cookie
-          setUsernameFromResponse(res);
+          setUsernameFromResponse(body);
           dispatch(loginResultReceived(false));
         })
         .catch(err => {

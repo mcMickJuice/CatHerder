@@ -8,7 +8,7 @@ export function verifyUser(credentials) {
       const users = conn.collection(USER_COLLECTION);
 
       const { username, password } = credentials;
-      // TODO replace deprecated method
+      // TODO replace deprecated method and specify to return only username, imageUrl, fullName
       return users.findOne({ username, password });
     })
     .then(user => {
@@ -18,6 +18,7 @@ export function verifyUser(credentials) {
       }
 
       // TODO return more than just username?
-      return { username: user.username };
+      const { username, imageUrl, fullName } = user;
+      return { username, imageUrl, fullName };
     });
 }

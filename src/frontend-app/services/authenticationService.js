@@ -17,10 +17,7 @@ export const login = (username, password) => {
     .post(loginUrl)
     .send(body)
     .end()
-    .then(res => {
-      console.log('authentication complete!', res);
-      return res;
-    })
+    .then(res => res)
     .catch(err => {
       console.log('an error has occurred authenticating', err);
       throw err;
