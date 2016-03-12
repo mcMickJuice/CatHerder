@@ -1,0 +1,4 @@
+gulpfile*.js
+webpack.*.js
+karma.*.js
+build/**

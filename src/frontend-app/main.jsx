@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
+import Login from './login/LoginApp';
 
-import { App } from './component/app.jsx';
+// import { App } from './components/app.jsx';
 
-ReactDOM.render(<App />, document.getElementById('app-mount'));
+ReactDOM.render(<Login />, document.getElementById('app-mount'));

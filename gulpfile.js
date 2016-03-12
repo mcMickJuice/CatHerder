@@ -38,10 +38,10 @@ function onBuild(done) {
   }
 }
 
-var eslintGlob = args.glob || '*.js';
+var eslintGlob = args.glob || 'src/**/*.js*';
 gulp.task('lint', function() {
 
-  return gulp.src([eslintGlob, '!node_modules/**'])
+  return gulp.src([eslintGlob, '!node_modules/**', '!build/**'])
     .pipe(eslint())
     .pipe(eslint.format());
 });
@@ -127,7 +127,7 @@ function startServer() {
   })
 }
 
-gulp.task('watch', function (done) {
+gulp.task('watch', ['lint-watch'], function (done) {
   runSequence('clean', 'move-static'
     , ['backend-watch', 'frontend-watch']
     , done);

@@ -5,6 +5,9 @@
   ],
   "rules": {
     "no-console": 0,
-    "new-cap": 0
+    "new-cap": 0,
+    "react/jsx-no-bind": 0,
+    "max-len": [1, 150],
+    "eol-last": 0
   }
 }
