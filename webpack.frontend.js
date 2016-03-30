@@ -11,7 +11,7 @@ module.exports = {
 	entry: [
 		//hot module loader too
 		'webpack-dev-server/client?http://localhost:3000',
-		'./src/frontend-app/Main.jsx'
+		'./src/web/Main.jsx'
 	],
 	output: {
 		path: outputPath + '/js',

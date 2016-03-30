@@ -18,7 +18,7 @@ gulp.task('clean', function (done) {
 });
 
 gulp.task('move-static', function () {
-  return gulp.src('./src/frontend-app/index.html')
+  return gulp.src('./src/web/index.html')
     .pipe(gulp.dest('./build/static'));
 });
 

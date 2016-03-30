@@ -1,4 +1,4 @@
-import * as serverApp from '../../src/backend-web-app/app.js';
+import * as serverApp from '../../src/server/app.js';
 import request from 'request';
 import test from 'ava';
 

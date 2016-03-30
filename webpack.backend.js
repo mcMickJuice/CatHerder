@@ -7,7 +7,7 @@ var nodeModules = require('fs').readdirSync('node_modules')
 function buildConfig(env) {
     return {
         entry: [
-            './src/backend-web-app/main.js'
+            './src/server/main.js'
         ],
         output: {
             path: path.join(__dirname, 'build'),

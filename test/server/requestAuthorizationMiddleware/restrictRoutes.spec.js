@@ -1,4 +1,4 @@
-import moduleToTest from '../../../src/backend-web-app/auth/requestAuthorizationMiddleware';
+import moduleToTest from '../../../src/server/auth/requestAuthorizationMiddleware';
 import test from 'ava';
 import sinon from 'sinon';
 
