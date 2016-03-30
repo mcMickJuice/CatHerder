@@ -1,57 +1,47 @@
-var serverApp = require('../../src/backend-web-app/app.js')
-require('chai').should();
-var request = require('request');
+import * as serverApp from '../../src/backend-web-app/app.js';
+import request from 'request';
+import test from 'ava';
 
-var port = 4000;
+const port = 4000;
+const rootUrl = `http://localhost:${port}`;
 
-var rootUrl = `http://localhost:${port}`;
+function verifyResponse(testCallback, requestUrl) {
+    request.get(requestUrl)
+        .on('response', testCallback);
+}
 
-describe('application', () => {
-    beforeEach(done => {
-        serverApp.start(port, () => done());
-    });
-
-    afterEach(() => {
-        serverApp.stop();
-    });
-
-    function verifyResponse(testCallback, requestUrl) {
-        request.get(requestUrl)
-            .on('response', testCallback);
-    }
-
-    describe('calls to root', () => {
-        it('should return ok status', done => {
-            verifyResponse(res => {
-                res.statusCode.should.equal(200);
-                done()
-            }, rootUrl)
-        });
-    });
-
-    describe('should not restrict', () => {
-        it('calls to root', done => {
-            verifyResponse(res => {
-                res.statusCode.should.not.equal(401);
-                done();
-            }, rootUrl)
-        });
-
-        it('calls to auth resources', done => {
-            verifyResponse(res => {
-                res.statusCode.should.not.equal(401);
-                done();
-            },`${rootUrl}/auth`)
-        })
-    });
-
-    describe('should restrict', () => {
-        it('access to pools route', done => {
-            verifyResponse(res => {
-                res.statusCode.should.equal(401);
-                done()
-            }, `${rootUrl}/pools`)
-        })
-    })
+test.cb.before(t => {
+    serverApp.start(port, () => t.end());
 });
 
+test.cb.after(t => {
+    serverApp.stop(t.end);
+})
+
+test.cb('calls to root should return ok status', t => {
+    verifyResponse(res => {
+        t.same(res.statusCode, 200);
+        t.end()
+    }, rootUrl)
+});
+
+test.cb('calls to root should not be restricted', t => {
+    verifyResponse(res => {
+        t.not(res.statusCode, 401);
+        t.end();
+    }, rootUrl)
+});
+
+test.cb('calls to authenticated resources are not restricted', t => {
+    verifyResponse(res => {
+        t.not(res.statusCode, 401);
+        t.end();
+    }, `${rootUrl}/auth`)
+})
+
+test.cb('calls to pools route is restricted', t => {
+    verifyResponse(res => {
+        t.is(res.statusCode, 401);
+        t.end();
+    }, `${rootUrl}/pools`)
+})

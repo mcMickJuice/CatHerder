@@ -46,7 +46,7 @@ export function start(port, callback) {
   });
 }
 
-export function stop() {
+export function stop(cb) {
   if (!server) {
     throw new Error('server not started, can\'t call close!');
   }
@@ -55,5 +55,5 @@ export function stop() {
     console.log('App stopping');
   }
 
-  server.close();
+  server.close(cb);
 }
