@@ -13,7 +13,7 @@ const app = express();
 const env = process.env.NODE_ENV;
 
 if (env === 'development') {
-  app.use(logger);
+	app.use(logger);
 }
 
 app.use(bodyParser.json());
@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'static')));
 app.use(requestAuthHandler(/^(\/auth|\/$)/));
 
 app.get('/', (req, res) => {
-  res.send();
+	res.send();
 });
 
 poolRoutes(app);
@@ -38,22 +38,22 @@ app.use(errorHandler(env));
 
 let server;
 export function start(port, callback) {
-  server = app.listen(port, () => {
-    if (env === 'development') {
-      console.log(`App listening on port ${port}`);
-    }
-    if (callback) callback();
-  });
+	server = app.listen(port, () => {
+		if (env === 'development') {
+			console.log(`App listening on port ${port}`);
+		}
+		if (callback) callback();
+	});
 }
 
 export function stop(cb) {
-  if (!server) {
-    throw new Error('server not started, can\'t call close!');
-  }
+	if (!server) {
+		throw new Error('server not started, can\'t call close!');
+	}
 
-  if (env === 'development') {
-    console.log('App stopping');
-  }
+	if (env === 'development') {
+		console.log('App stopping');
+	}
 
-  server.close(cb);
+	server.close(cb);
 }

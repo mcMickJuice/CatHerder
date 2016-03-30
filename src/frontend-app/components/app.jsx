@@ -9,6 +9,4 @@ const App = () => <div>Hello World hi!</div>;
 
 // if not, route to login "app"
 
-module.exports = {
-  App,
-};
+export default App;

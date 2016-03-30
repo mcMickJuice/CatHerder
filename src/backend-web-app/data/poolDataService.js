@@ -1,5 +1,5 @@
 import Q from 'q';
-import { connection, dbId } from './dbConnection';
+import {connection, dbId} from './dbConnection';
 
 const POOL_COLLECTION = 'pools';
 
@@ -9,14 +9,14 @@ const POOL_COLLECTION = 'pools';
  * @returns {Promise.<T>}
  */
 export function getAvailablePools(userId) {
-  return connection()
-    .then(conn => {
-      const pools = conn.collection(POOL_COLLECTION);
-      // TODO check if this returns promise if callback not provided...
-      // TODO query should check each pools users collection, not created by field
-      return Q(pools.find({ users: userId }).toArray());
-    })
-    .then(pools => pools);
+	return connection()
+		.then(conn => {
+			const pools = conn.collection(POOL_COLLECTION);
+			// TODO check if this returns promise if callback not provided...
+			// TODO query should check each pools users collection, not created by field
+			return Q(pools.find({users: userId}).toArray());
+		})
+		.then(pools => pools);
 }
 
 /**
@@ -25,11 +25,11 @@ export function getAvailablePools(userId) {
  * @returns {*|Promise.<T>}
  */
 export function getPoolById(poolId) {
-  return connection()
-    .then(conn => {
-      const pools = conn.collection(POOL_COLLECTION);
-      return pools.findOne({ _id: dbId(poolId) });
-    });
+	return connection()
+		.then(conn => {
+			const pools = conn.collection(POOL_COLLECTION);
+			return pools.findOne({_id: dbId(poolId)});
+		});
 }
 
 /**
@@ -38,18 +38,18 @@ export function getPoolById(poolId) {
  * @returns {*|Promise.<T>}
  */
 export function createPool(poolConfig) {
-  // poolName, username,
-  const { poolName, username } = poolConfig;
+	// poolName, username,
+	const {poolName, username} = poolConfig;
 
-  return connection()
-    .then(conn => {
-      const pools = conn.collection(POOL_COLLECTION);
+	return connection()
+		.then(conn => {
+			const pools = conn.collection(POOL_COLLECTION);
 
-      function fetchNewPool() {
-        return pools.findOne({ poolName }, { fields: { _id: 1 } }).then(({ _id }) => _id);
-      }
+			function fetchNewPool() {
+				return pools.findOne({poolName}, {fields: {_id: 1}}).then(({_id}) => _id);
+			}
 
-      return pools.insertOne({ poolName, username })
-        .then(fetchNewPool);
-    });
+			return pools.insertOne({poolName, username})
+				.then(fetchNewPool);
+		});
 }

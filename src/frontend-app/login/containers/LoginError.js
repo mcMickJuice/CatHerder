@@ -1,9 +1,9 @@
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import Login from '../components/Error';
 
 const mapStateToProps = (state) => ({
-  isRequestInFlight: state.isRequestInFlight,
-  invalidCredentials: state.invalidCredentials,
+	isRequestInFlight: state.isRequestInFlight,
+	invalidCredentials: state.invalidCredentials
 }
 );
 
