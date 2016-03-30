@@ -10,9 +10,6 @@ var args = require('yargs').argv;
 
 process.env.NODE_ENV = args.env || 'development';
 
-//import external gulp tasks
-require('./gulpfile-tests.js');
-
 var backendConfig = require('./webpack.backend.js')(process.env.NODE_ENV);
 var frontendConfig = require('./webpack.frontend.js');
 
