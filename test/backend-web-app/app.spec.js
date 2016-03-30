@@ -15,7 +15,6 @@ test.cb.before(t => {
 });
 
 test.cb.after(t => {
-    console.log('ive been called')
     serverApp.stop(t.end);
 })
 
