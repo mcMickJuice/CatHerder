@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
-import App  from './components/app.jsx';
+import Root  from './containers/Root';
 
-ReactDOM.render(<App />, document.getElementById('app-mount'));
+ReactDOM.render(<Root />, document.getElementById('app-mount'));
