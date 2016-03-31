@@ -1,9 +1,9 @@
 const defaultState = {
 	currentGroupId: null,
-	groups: []
+	items: []
 };
 const groups = (state = defaultState, action) => {
-	return defaultState
+	return state
 }
 
 export default groups

@@ -12,12 +12,22 @@ const devToolsComponent = process.env.NODE_ENV === 'production'
 	: <DevTools />;
 
 //TODO pick this user out of local storage or wherever
-const defaultUser = {
-	username: 'mjoyce',
-	displayName: 'Mike Joyce',
-	imageUrl: 'http://i.imgur.com/YWJWjgj.jpg'
+const defaultState = {
+	user: {
+		username: 'mjoyce',
+		displayName: 'Mike Joyce',
+		imageUrl: 'http://i.imgur.com/YWJWjgj.jpg'
+	},
+	groups: {
+		items: [1,2,3]
+	},
+	lists: {
+		items: [1,2]
+	},
+	notifications: [1]
 };
-const store = configureStore({user: defaultUser});
+
+const store = configureStore(defaultState);
 const history = syncHistoryWithStore(browserHistory, store);
 
 const Root = () => {

@@ -1,9 +1,9 @@
 import React, {PropTypes} from 'react'
 import List from 'material-ui/lib/lists/list'
-import ListItem from 'material-ui/lib/lists/list-item'
+import DisplayOverview from './DisplayOverview'
 import UserAvatar from './UserAvatar'
 import LeftNav from 'material-ui/lib/left-nav'
-import CommunicationChatBubble from 'material-ui/lib/svg-icons/communication/chat-bubble'
+
 
 //master layout of app
 const Main = ({children}) => {
@@ -31,12 +31,7 @@ const Main = ({children}) => {
 			<LeftNav open={true} style={{flexGrow: '2'}}>
 				<List>
 					<UserAvatar />
-					<ListItem
-						primaryText={'Notifications'}
-						rightIcon={<CommunicationChatBubble />}>
-					</ListItem>
-					<ListItem primaryText={'Groups'}/>
-					<ListItem primaryText={'Lists'}/>
+					<DisplayOverview />
 				</List>
 			</LeftNav>
 			<div className="app-body" style={bodyStyle}>
