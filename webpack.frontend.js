@@ -6,12 +6,15 @@ var webpack = require('webpack');
 
 module.exports = {
 	resolve: {
-		extensions: ['', '.jsx', '.js']
+		extensions: ['', '.jsx', '.js'],
+		alias: {
+			'react': path.join(__dirname, 'node_modules', 'react')
+		}
 	},
 	entry: [
 		//hot module loader too
 		'webpack-dev-server/client?http://localhost:3000',
-		'./src/web/Main.jsx'
+		'./src/web/Index.jsx'
 	],
 	output: {
 		path: outputPath + '/js',
