@@ -24,7 +24,7 @@ app.use(passport.initialize());
 app.use(express.static(path.join(__dirname, 'static')));
 
 // ignore auth and base endpoint, these will be "unsecure"
-app.use(requestAuthHandler(/^(\/auth|\/$)/));
+// app.use(requestAuthHandler(/^(\/auth|\/$)/));
 
 app.get('/', (req, res) => {
 	res.send();
@@ -32,6 +32,12 @@ app.get('/', (req, res) => {
 
 poolRoutes(app);
 loginRoutes(app);
+
+
+//TODO is there an easier way to do this using static path?
+app.get('*', (req, res) => {
+	res.sendFile(path.join(__dirname, 'static','index.html'));
+});
 
 // error handler...assign last;
 app.use(errorHandler(env));
